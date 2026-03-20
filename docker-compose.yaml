@@ -39,7 +39,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
     ports:
-      - "8000:8000"
+      - "8011:8011"
     depends_on:
       db:
         condition: service_healthy

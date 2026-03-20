@@ -20,6 +20,6 @@ WORKDIR /app
 
 COPY --from=builder /build/wallet-app .
 
-EXPOSE 8000
+EXPOSE 8011
 
 CMD ["./wallet-app"]
