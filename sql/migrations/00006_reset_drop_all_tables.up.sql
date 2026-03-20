@@ -1,0 +1,2 @@
+-- This migration was a one-time reset and is now a no-op to prevent re-running drops
+-- All tables are managed by earlier migrations
