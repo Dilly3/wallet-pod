@@ -1,5 +1,4 @@
--- sql/create_tables.sql
-
+-- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
@@ -7,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Create wallets table
 CREATE TABLE IF NOT EXISTS wallets (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
@@ -18,17 +18,13 @@ CREATE TABLE IF NOT EXISTS wallets (
 );
 
 -- Create transaction type enum using PL/pgSQL anonymous block for safe, idempotent creation
--- PostgreSQL doesn't support "CREATE TYPE IF NOT EXISTS", so we use DO $$ BEGIN ... END $$ 
--- to wrap the creation in error handling that allows the migration to run multiple times
 DO $$ BEGIN
-    -- Define an ENUM type with the three allowed transaction statuses
     CREATE TYPE transaction_type AS ENUM ('deposit', 'withdrawal', 'transfer');
 EXCEPTION
-    -- If the type already exists from a previous run, catch the duplicate_object error
-    -- and do nothing (null;), allowing the migration to complete successfully
     WHEN duplicate_object THEN null;
 END $$;
 
+-- Create transactions table
 CREATE TABLE IF NOT EXISTS transactions (
     id SERIAL PRIMARY KEY,
     wallet_id INT NOT NULL,

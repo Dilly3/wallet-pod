@@ -24,7 +24,7 @@ func (txr *TransactionRepository) CreateTransaction(ctx context.Context, trxn *m
 		trxn.WalletID,
 		trxn.Amount,
 		trxn.TxnType,
-		trxn.ReferenceID,
+		trxn.Reference,
 		trxn.Description,
 	).Scan(&id)
 	return id, err

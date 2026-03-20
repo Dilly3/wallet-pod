@@ -1,0 +1,104 @@
+-- Revert timestamps and soft delete changes
+-- Convert BIGINT back to TIMESTAMPTZ and drop new columns
+
+-- Revert users table
+DO $$ BEGIN
+    ALTER TABLE users 
+        ALTER COLUMN created_at DROP DEFAULT;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE users 
+        ALTER COLUMN created_at TYPE TIMESTAMPTZ USING TO_TIMESTAMP(created_at);
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE users 
+        ALTER COLUMN created_at SET DEFAULT NOW();
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE users DROP COLUMN IF EXISTS updated_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE users DROP COLUMN IF EXISTS deleted_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+-- Revert wallets table
+DO $$ BEGIN
+    ALTER TABLE wallets 
+        ALTER COLUMN created_at DROP DEFAULT;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE wallets 
+        ALTER COLUMN created_at TYPE TIMESTAMPTZ USING TO_TIMESTAMP(created_at);
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE wallets 
+        ALTER COLUMN created_at SET DEFAULT NOW();
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE wallets DROP COLUMN IF EXISTS updated_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE wallets DROP COLUMN IF EXISTS deleted_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+-- Revert transactions table
+DO $$ BEGIN
+    ALTER TABLE transactions 
+        ALTER COLUMN created_at DROP DEFAULT;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE transactions 
+        ALTER COLUMN created_at TYPE TIMESTAMPTZ USING TO_TIMESTAMP(created_at);
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE transactions 
+        ALTER COLUMN created_at SET DEFAULT NOW();
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE transactions DROP COLUMN IF EXISTS updated_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    ALTER TABLE transactions DROP COLUMN IF EXISTS deleted_at;
+EXCEPTION 
+    WHEN OTHERS THEN NULL;
+END $$;

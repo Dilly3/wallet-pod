@@ -1,4 +1,5 @@
--- Update timestamps to BIGINT (Unix seconds) and add soft delete columns
+-- Add timestamps and soft delete columns to users, wallets, and transactions tables
+-- This migration maintains data consistency by converting TIMESTAMPTZ to BIGINT (Unix seconds)
 
 -- Update users table
 DO $$ BEGIN
