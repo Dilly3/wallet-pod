@@ -10,7 +10,7 @@ var (
 )
 
 type Banker interface {
-	Deposit(ctx context.Context, walletID int, amount float64, description string) error
-	Withdraw(ctx context.Context, walletID int, amount float64, description string) error
-	Transfer(ctx context.Context, fromWalletID, toWalletID int, amount float64, description string) error
+	Deposit(ctx context.Context, walletID int, amount float64, description string, ref *string) error
+	Withdraw(ctx context.Context, walletID int, amount float64, description string, ref *string) error
+	Transfer(ctx context.Context, fromWalletID, toWalletID int, amount float64, description string, ref *string) error
 }
