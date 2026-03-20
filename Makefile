@@ -7,7 +7,8 @@ down:
 logs:
 	docker compose logs -f
 migrate-dev-up:
-	@for file in sql/migrations/*.up.sql; do \
+	@files=$$(ls -1 sql/migrations/*.up.sql 2>/dev/null); \
+	for file in $$files; do \
 		echo "Running $$file..."; \
 		docker exec -i wallet_pod_db psql -U walletpod -d walletpod_db < $$file || exit 1; \
 	done
