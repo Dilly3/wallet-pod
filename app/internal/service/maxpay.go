@@ -9,14 +9,14 @@ import (
 	"go.uber.org/zap"
 )
 
-type WalletService struct {
+type Maxpay struct {
 	DB     *sqlx.DB
 	Repo   *db.Repository
 	logger *zap.Logger
 }
 
-func NewWalletService(dbConn *sqlx.DB, logger *zap.Logger) *WalletService {
-	return &WalletService{
+func NewMaxpay(dbConn *sqlx.DB, logger *zap.Logger) Maxpay {
+	return Maxpay{
 		DB:     dbConn,
 		Repo:   db.NewRepository(dbConn),
 		logger: logger,
@@ -24,8 +24,8 @@ func NewWalletService(dbConn *sqlx.DB, logger *zap.Logger) *WalletService {
 }
 
 // Deposit adds funds to a wallet and logs the transaction.
-func (s *WalletService) Deposit(ctx context.Context, walletID int, amount float64, description string, ref *string) error {
-	tx, err := s.DB.BeginTxx(ctx, nil)
+func (m Maxpay) Deposit(ctx context.Context, walletID int, amount float64, description string, ref *string) error {
+	tx, err := m.DB.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (s *WalletService) Deposit(ctx context.Context, walletID int, amount float6
 	if err := tx.Commit(); err != nil {
 		return err
 	}
-	s.logger.Info("Deposited funds",
+	m.logger.Info("Deposited funds",
 		zap.Float64("amount", amount),
 		zap.Int("walletID", wallet.ID),
 		zap.Float64("newBalance", newBalance),
@@ -56,8 +56,8 @@ func (s *WalletService) Deposit(ctx context.Context, walletID int, amount float6
 }
 
 // Withdraw subtracts funds if the wallet has enough balance.
-func (s *WalletService) Withdraw(ctx context.Context, walletID int, amount float64, description string, ref *string) error {
-	tx, err := s.DB.BeginTxx(ctx, nil)
+func (m Maxpay) Withdraw(ctx context.Context, walletID int, amount float64, description string, ref *string) error {
+	tx, err := m.DB.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (s *WalletService) Withdraw(ctx context.Context, walletID int, amount float
 		return err
 	}
 
-	s.logger.Info("Withdrew funds",
+	m.logger.Info("Withdrew funds",
 		zap.Float64("amount", amount),
 		zap.Int("walletID", wallet.ID),
 		zap.Float64("newBalance", newBalance),
@@ -97,8 +97,8 @@ func (s *WalletService) Withdraw(ctx context.Context, walletID int, amount float
 }
 
 // Transfer moves funds from one wallet to another atomically.
-func (s *WalletService) Transfer(ctx context.Context, fromWalletID, toWalletID int, amount float64, description string, ref *string) error {
-	tx, err := s.DB.BeginTxx(ctx, nil)
+func (m Maxpay) Transfer(ctx context.Context, fromWalletID, toWalletID int, amount float64, description string, ref *string) error {
+	tx, err := m.DB.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func (s *WalletService) Transfer(ctx context.Context, fromWalletID, toWalletID i
 		return err
 	}
 
-	s.logger.Info("Transferred funds",
+	m.logger.Info("Transferred funds",
 		zap.Float64("amount", amount),
 		zap.Int("fromWalletID", fromWallet.ID),
 		zap.Int("toWalletID", toWallet.ID),
